@@ -15,21 +15,26 @@ class User:
         self.game = _game
         self.attributes = dict()
         self.attributes['id'] = [str(uuid.uuid4()), True]
-        self.attributes['name'] = ["guest", False]
-        self.attributes['age'] = [0, False]
-        self.attributes['education'] = ["", False]
+        self.attributes['name'] = ["guest", True]
+        self.attributes['age'] = [1, True]
+        self.attributes['education'] = ["", True]
         self.attributes['language'] = ["", False]
-        self.attributes['eyesight'] = [True, False]
-        self.attributes['sleep'] = [True, False]
-        self.attributes['caffeine'] = [False, False]
-        self.attributes['pc_experience'] = [0, False]
-        self.attributes['web_experience'] = [0, False]
-        self.attributes['played_before'] = [0, False]
+        self.attributes['eyesight'] = [0, True]
+        self.attributes['sleep'] = [1, True]
+        self.attributes['caffeine'] = [0, True]
+        self.attributes['pc_experience'] = [0, True]
+        self.attributes['web_experience'] = [0, True]
+        self.attributes['played_before'] = [0, True]
 
         self.complete = False
 
     def set_attribute(self, _message_payload):
-        value = unidecode.unidecode("".join(x for x in _message_payload['value'] if x.isalnum()))
+        value = _message_payload['value']
+        print(_message_payload)
+        if isinstance(_message_payload['value'], bool):
+            value = int(_message_payload['value'])
+            print("converting")
+
         self.attributes[_message_payload['name']][0] = value
         self.attributes[_message_payload['name']][1] = True
         self.request_feature()

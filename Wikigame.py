@@ -22,7 +22,7 @@ class WikiGame:
 #    menu_state = bool(random.getrandbits(1))
     menu_state = False
     game = None
-    gamelist_name = 'PLAIN_1'
+    gamelist_name = 'PLAIN_2'
     gamelist = None
     list_index = 0
     session_id = str(uuid.uuid4())
@@ -170,7 +170,7 @@ class WikiGame:
             print("Comparison complete")
 
     def store_screenshot(self, _png_data):
-        storepath = "C:\Users\Patrick\Desktop\WIKIGAME_IMAGES" + os.sep
+        storepath = "logfiles" + os.sep
 #        print("IMAGE DATA: " + _png_data[22:])
         image_data = a2b_base64(_png_data[22:])
 
@@ -206,8 +206,8 @@ class WikiGame:
 
     def store_log(self, _timestamp, _action, _payload):
         server_timestamp = int(time.time())
-        storepath = "C:\Users\Patrick\Desktop\WIKIGAME_LOG" + os.sep
-        log_path = os.path.join(storepath + self.user_controller.attributes['name'][0] + os.sep)
+        storepath = "logfiles" + os.sep
+        log_path = os.path.join(storepath + self.user_controller.attributes['id'][0] + os.sep)
 
         if not os.path.exists(log_path):
             os.makedirs(log_path)

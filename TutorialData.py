@@ -13,7 +13,9 @@ class TutorialData:
                   {"type": "tutorial_close", "message": "tutorial_intro"})
 
         self.step("first_mission",
-                  {"message": {"goal_page": {"url": "wiki-schools/wp/l/Livermorium.htm", "link": "wiki-schools\\wp\\l\\Livermorium.htm", "id": 3356, "name": "Livermorium"}, "start_page": {"url": "wiki-schools/wp/e/English_language.htm", "link": "wiki-schools\\wp\\e\\English_language.htm", "id": 1924, "name": "English language"}, "game_name": "PLAIN_2_21175f63-286e-476b-b202-3710806d1dde", "distance": 3}, "type": "new_game"},
+                  {"message": {"goal_page": {"url": "wiki-schools/wp/w/Washington%252C_D.C..htm", "link": "wiki-schools\\wp\\w\\Washington%252C_D.C..htm", "id": 3356, "name": "Washington, D.C."},
+                               "start_page": {"url": "wiki-schools/wp/e/English_language.htm", "link": "wiki-schools\\wp\\e\\English_language.htm", "id": 1924, "name": "English language"},
+                               "game_name": "PLAIN_2_21175f63-286e-476b-b202-3710806d1dde", "distance": 3}, "type": "new_game"},
                   {"type": "event", "message": "load", "url": "wiki-schools/wp/e/English_language.htm"})
 
         self.step("tutorial_landingpage",
@@ -34,7 +36,7 @@ class TutorialData:
 
         self.step("tutorial_start_mission",
                   {"type": "tutorial", "message": {"name": 'tutorial_start_mission', "type": 'tutorial', "position": {"x": {"alignment": "center", "offset": "0"}, "y": {"alignment": "center", "offset": "0"}}, "arrow_position": "", "title": "Good Luck!", "text": "Now please go ahead and try to find your target article by following links."}},
-                  {"type": "event", "message": "load", "url": "wiki-schools/wp/l/Livermorium.htm"})
+                  {"type": "event", "message": "load", "url": "wiki-schools/wp/w/Washington%252C_D.C..htm"})
 
         self.step("tutorial_success",
                   {"type": "tutorial", "message": {"name": 'tutorial_success', "type": 'emphasis', "position": {"x": {"alignment": "center", "offset": "0"}, "y": {"alignment": "center", "offset": "0"}}, "arrow_position": "", "title": "Well Done!", "text": "You found your target. There is one more thing you need to learn though. Close this message to load another task."}},
