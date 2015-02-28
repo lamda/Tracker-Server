@@ -28,26 +28,38 @@ class WikiGame:
     session_id = str(uuid.uuid4())
     tutorial_completed = False
     tutorial_data = None
+    game_started = False
 
     def __init__(self, _socket, _uuid):
+        database_connection.execute("DELETE FROM users;", None, None)
+        database_connection.execute("DELETE FROM gamesessions;", None, None)
+        database_connection.commit()
+
         self.socket = _socket
         self.socket.write_json_message("handshake", str(uuid.uuid4()))
+
+        self.socket.write_json_message("tutorial", "CLEAR_ALL") ##################
+        import shutil
+        for f in os.listdir('logfiles'):
+            shutil.rmtree(os.path.join('logfiles', f))
+
         self.gamelist = WikiGameController.fetch_list(self.gamelist_name)['game_ids'].split(',')
         random.shuffle(self.gamelist)
-        print(self.gamelist)
         self.user_controller = User.User(self)
         self.session_id = _uuid
         print("STARTING WIKIGAME WITH SESSION ID: " + self.session_id)
 
     def handle_message(self, _message_container):
         if _message_container['type'] == "DEBUG_RESET":
-            WikiGameController.update_session(self.session_id,
-                                  self.gamelist_name,
-                                  self.list_index,
-                                  self.user_controller.get_attributes()['id'][0],
-                                  True,
-                                  self.tutorial_completed,
-                                  ",".join(self.gamelist))
+            WikiGameController.update_session(
+                self.session_id,
+                self.gamelist_name,
+                self.list_index,
+                self.user_controller.get_attributes()['id'][0],
+                True,
+                self.tutorial_completed,
+                ",".join(self.gamelist)
+            )
             return
         if _message_container['type'] == "handshake":
             self.game_id = _message_container['message']
@@ -66,16 +78,34 @@ class WikiGame:
                 return
             else:
                 if _message_container['type'] == "event":
-                    self.store_log(_message_container['game_features']['timestamp'], _message_container['message'], _message_container['game_features'])
+                    self.store_log(
+                        _message_container['game_features']['timestamp'],
+                        _message_container['message'],
+                        _message_container['game_features']
+                    )
                     if _message_container['message'] == "load":
-                        self.check_page(_message_container['game_features']['game_status']['current_page'])
+                        self.game_started = True
+                        self.store_log(0, "GAME_STARTED", self.game['game_name'])
+                        self.check_page(
+                            _message_container['game_features']['game_status']['current_page']
+                        )
                 elif _message_container['type'] == "abort":
                     self.game_abort()
                 elif _message_container['type'] == "screenshot":
-                    screenshot_location = self.store_screenshot(_message_container['message'])
-                    self.store_log(_message_container['game_features']['timestamp'], 'screenshot', screenshot_location)
+                    screenshot_location = self.store_screenshot(
+                        _message_container['message']
+                    )
+                    self.store_log(
+                        _message_container['game_features']['timestamp'],
+                        'screenshot',
+                        screenshot_location
+                    )
                 elif _message_container['type'] == "link_data":
-                    self.store_log(_message_container['game_features']['timestamp'], 'link_data', _message_container['message'])
+                    self.store_log(
+                        _message_container['game_features']['timestamp'],
+                        'link_data',
+                        _message_container['message']
+                    )
 
         else:
             print('User not set!')
@@ -100,13 +130,15 @@ class WikiGame:
             self.user_controller.new_user()
 
     def session_start(self):
-        WikiGameController.update_session(self.session_id,
-                                          self.gamelist_name,
-                                          self.list_index,
-                                          self.user_controller.get_attributes()['id'][0],
-                                          False,
-                                          self.tutorial_completed,
-                                          ",".join(self.gamelist))
+        WikiGameController.update_session(
+            self.session_id,
+            self.gamelist_name,
+            self.list_index,
+            self.user_controller.get_attributes()['id'][0],
+            False,
+            self.tutorial_completed,
+            ",".join(self.gamelist)
+        )
 
         if not self.tutorial_completed:
             self.tutorial()
@@ -127,7 +159,6 @@ class WikiGame:
             return
         self.game = WikiGameController.fetch_game(self.gamelist[self.list_index])
         self.socket.write_json_message("new_game", self.game)
-        self.store_log(0, "GAME_STARTED", self.game['game_name'])
 
 #        self.socket.write_json_message("hint", {"type": "hint", "text": "SOLUTION", "url": self.game['goal_page']['link']})
 #        hubs = WikiGameController.fetch_hubs(WikiGameController.get_page_by_link(self.game['start_page']['link']), 5)
@@ -215,6 +246,8 @@ class WikiGame:
         return os.path.join(screenshot_path, filename)
 
     def store_log(self, _timestamp, _action, _payload):
+        if not self.game_started:
+            return
         server_timestamp = int(time.time())
         storepath = "logfiles" + os.sep
         log_path = os.path.join(storepath + self.user_controller.attributes['id'][0] + os.sep)
