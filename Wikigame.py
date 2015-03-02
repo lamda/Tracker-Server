@@ -23,11 +23,11 @@ class WikiGame:
 #    menu_state = bool(random.getrandbits(1))
     menu_state = False
     game = None
-    gamelist_name = 'PLAIN_2'
+    gamelist_name = 'PLAIN_1'
     gamelist = None
     list_index = 0
     session_id = str(uuid.uuid4())
-    tutorial_completed = True
+    tutorial_completed = False
     tutorial_data = None
 
     def __init__(self, _socket, _uuid):
