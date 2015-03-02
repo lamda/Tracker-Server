@@ -193,7 +193,7 @@ class TutorialData:
                           "arrow_position": "",
                           "title": "Let's give it a try!",
                           "text": "Now please go ahead and try to find the"
-                                  "target article by following links."
+                                  " target article by following links."
                       }
                   },
                   {
