@@ -45,7 +45,10 @@ class WikiGame:
             database_connection.execute("DELETE FROM users", None, None)
             database_connection.execute("DELETE FROM gamesessions", None, None)
             database_connection.commit()
-            shutil.rmtree('logfiles')
+            try:
+                shutil.rmtree('logfiles')
+            except WindowsError:
+                pass
             WikiGameController.update_session(
                 self.session_id,
                 self.gamelist_name,
@@ -84,7 +87,8 @@ class WikiGame:
                 elif _message_container['type'] == "link_data":
                     self.store_log(_message_container['game_features']['timestamp'], 'link_data', _message_container['message'])
             else:
-                print('Wrong game!')
+                print("Gamename missmatch")
+
         else:
             print('User not set!')
 
@@ -102,7 +106,7 @@ class WikiGame:
             self.gamelist = session_data['mission_list'].split(',')
             self.list_index = session_data['list_index']
             self.user_controller.load_user(session_data['user_id'])
-            self.socket.write_json_message("dialog", {"title": "Restoring game", "text": "Restarting at game" + str(self.list_index + 1) + "/" + str(len(self.gamelist))})
+            self.socket.write_json_message("dialog", {"title": "Restoring game", "text": "Restarting at game: " + str(self.list_index + 1) + "/" + str(len(self.gamelist))})
 
         else:
             self.user_controller.new_user()
