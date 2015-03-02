@@ -113,7 +113,7 @@ class User:
             self.game.socket.write_json_message("feature_request", ("What is your level of education?", "education", "string"))
             return
         elif not self.attributes['language'][1]:
-            self.game.socket.write_json_message("feature_request", ("Which language is your mother tongue?", "language", "string"))
+            self.game.socket.write_json_message("feature_request", ("Is English your native language or is English the local language at your place of residence?", "language", "bool"))
             return
         elif not self.attributes['eyesight'][1]:
             self.game.socket.write_json_message("feature_request", ("Do you wear glasses?", "eyesight", "bool"))

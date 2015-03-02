@@ -2,6 +2,7 @@
 import uuid
 from binascii import a2b_base64
 import os
+import shutil
 import sys
 import time
 import random
@@ -41,13 +42,19 @@ class WikiGame:
 
     def handle_message(self, _message_container):
         if _message_container['type'] == "DEBUG_RESET":
-            WikiGameController.update_session(self.session_id,
-                                  self.gamelist_name,
-                                  self.list_index,
-                                  self.user_controller.get_attributes()['id'][0],
-                                  True,
-                                  self.tutorial_completed,
-                                  ",".join(self.gamelist))
+            database_connection.execute("DELETE FROM users", None, None)
+            database_connection.execute("DELETE FROM gamesessions", None, None)
+            database_connection.commit()
+            shutil.rmtree('logfiles')
+            WikiGameController.update_session(
+                self.session_id,
+                self.gamelist_name,
+                self.list_index,
+                self.user_controller.get_attributes()['id'][0],
+                True,
+                self.tutorial_completed,
+                ",".join(self.gamelist)
+            )
             return
         if _message_container['type'] == "handshake":
             self.game_id = _message_container['message']
@@ -64,7 +71,7 @@ class WikiGame:
                 else:
                     print("Game not started!")
                 return
-            else:
+            elif _message_container['game_features']['game_status']['game_id'] == self.game['game_name']:
                 if _message_container['type'] == "event":
                     self.store_log(_message_container['game_features']['timestamp'], _message_container['message'], _message_container['game_features'])
                     if _message_container['message'] == "load":
@@ -76,7 +83,8 @@ class WikiGame:
                     self.store_log(_message_container['game_features']['timestamp'], 'screenshot', screenshot_location)
                 elif _message_container['type'] == "link_data":
                     self.store_log(_message_container['game_features']['timestamp'], 'link_data', _message_container['message'])
-
+            else:
+                print('Wrong game!')
         else:
             print('User not set!')
 
