@@ -27,7 +27,7 @@ class WikiGame:
     gamelist = None
     list_index = 0
     session_id = str(uuid.uuid4())
-    tutorial_completed = False
+    tutorial_completed = True
     tutorial_data = None
 
     def __init__(self, _socket, _uuid):
