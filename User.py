@@ -23,7 +23,7 @@ class User:
         self.attributes['sleep'] = [1, True]
         self.attributes['caffeine'] = [0, True]
         self.attributes['pc_experience'] = [0, True]
-        self.attributes['web_experience'] = [0, True]
+        self.attributes['web_experience'] = [0, False]
         self.attributes['played_before'] = [0, True]
 
         self.complete = False
@@ -128,7 +128,7 @@ class User:
             self.game.socket.write_json_message("feature_request", ("How would your rate your experience in using a computer?", "pc_experience", "range", (0, 10)))
             return
         elif not self.attributes['web_experience'][1]:
-            self.game.socket.write_json_message("feature_request", ("How would you rate your skills at navigating the internet?", "web_experience", "range", (0, 10)))
+            self.game.socket.write_json_message("feature_request", ("How do you rate your experience with the Web?", "web_experience", "range", (0, 10)))
             return
         elif not self.attributes['played_before'][1]:
             self.game.socket.write_json_message("feature_request", ("Have you played this before?", "played_before", "bool"))
