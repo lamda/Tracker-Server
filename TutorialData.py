@@ -162,8 +162,8 @@ class TutorialData:
                           },
                           "arrow_position": "topright",
                           "title": "Target Article",
-                          "text": "And this is the article you need to find. "
-                                  "You can click on this link to read the"
+                          "text": "And this is the article you need to find."
+                                  " You can click on this link to read the"
                                   " article for the target and get some idea of"
                                   " what you are looking for.",
                       }
@@ -277,7 +277,7 @@ class TutorialData:
                           "arrow_position": "leftbottom",
                           "title": "Abort Button",
                           "text": "If you feel like you cannot find the target"
-                                  "you can abort the task at any time."
+                                  " you can abort the task at any time."
                                   " Please go ahead and try this now!"
                       }
                   },
@@ -305,7 +305,7 @@ class TutorialData:
                           },
                           "arrow_position": "", "title": "DONE!",
                           "text": "Thank you for completing the tutorial!"
-                                  "You are now ready to start your first task."
+                                  " You are now ready to start your first task."
                       }
                   },
                   {
